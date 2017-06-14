@@ -100,15 +100,6 @@ public class SchoolRecordsJSP extends HttpServlet {
         req.setAttribute("studentsList", lst);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/show-all-students-result.jsp");
         dispatcher.forward (req, resp);
-
-
-        Iterator<Student> iterator = lst.iterator();
-        while (iterator.hasNext()) {
-            pw.println("<tr>");
-            Student element = iterator.next();
-            pw.println("<td>" + element.toString() + "</td>");
-            pw.println("</tr>");
-        }
     }
 
     /**
