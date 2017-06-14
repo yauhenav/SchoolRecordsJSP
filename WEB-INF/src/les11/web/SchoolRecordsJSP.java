@@ -116,9 +116,9 @@ public class SchoolRecordsJSP extends HttpServlet {
             Student student = new Student(key);
             student = sesMngObj.displayOneStudent(student);
             req.setAttribute("studentObj", student);
-            //RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/showonestudent.jsp");
-            //dispatcher.forward (req, resp);
-            resp.sendRedirect("/WEB-INF/showonestudent.jsp");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/showonestudent.jsp");
+            dispatcher.forward (req, resp);
+            //resp.sendRedirect("/WEB-INF/showonestudent.jsp");
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");

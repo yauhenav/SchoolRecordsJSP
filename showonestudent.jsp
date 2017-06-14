@@ -14,9 +14,9 @@
 
 <table border=1>
 <tr>
-    <td> <%=student.getId()%> </td>
+    <td> <%=student%> </td>
 </tr>
 </table>
-
+<a href="index.jsp">Go to Home Page</a>
 </body>
 </html>
