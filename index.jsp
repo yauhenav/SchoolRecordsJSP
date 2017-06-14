@@ -8,10 +8,10 @@
 <h1>School Records JSP</h1>
 <table>
     <tr>
-        <td><a href="showonestudent1.jsp">Show one specified student</a></td>
+        <td><a href="showonestudentform.jsp">Show one specified student</a></td>
     </tr>
     <tr>
-        <td><a href="viewusers.jsp">Show all students</a></td>
+        <td><a href="show-all-students-form.jsp">Show all students</a></td>
     </tr>
 </table>
 </body>

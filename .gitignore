@@ -50,4 +50,5 @@ WEB-INF/classes/
 WEB-INF/lib/
 *.class
 WEB-INF.iml
+indexForReference.html
 

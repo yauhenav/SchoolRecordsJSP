@@ -27,7 +27,7 @@ public class SchoolRecordsJSP extends HttpServlet {
 
             switch (action) {
                 case "Show all students":
-                    executeShowAllStudents(pw, sesMngObj, sessObj);
+                    executeShowAllStudents(resp, pw, sesMngObj, sessObj, req);
                     break;
                 case "Show student":
                     executeShowOneStudent(resp, sesMngObj, req, pw);
@@ -89,7 +89,7 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Display all students
      */
-    private void executeShowAllStudents(PrintWriter pw, Service sesMngObj, HttpSession sessObj) throws DaoException, ServiceException {
+    private void executeShowAllStudents(HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpSession sessObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         pw.println("<B>Here's a list of all students in the DB</B>");
         pw.println("<table border=1>");
         //Uncomment the line below to print session number to web-page for test purposes
@@ -97,6 +97,11 @@ public class SchoolRecordsJSP extends HttpServlet {
         //Uncomment the line below to print session number to web server console for test purposes
         System.out.println(sessObj);
         List<Student> lst = sesMngObj.displayAllStudents();
+        req.setAttribute("studentsList", lst);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/show-all-students-result.jsp");
+        dispatcher.forward (req, resp);
+
+
         Iterator<Student> iterator = lst.iterator();
         while (iterator.hasNext()) {
             pw.println("<tr>");
@@ -116,9 +121,8 @@ public class SchoolRecordsJSP extends HttpServlet {
             Student student = new Student(key);
             student = sesMngObj.displayOneStudent(student);
             req.setAttribute("studentObj", student);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/showonestudent.jsp");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/showonestudentresult.jsp");
             dispatcher.forward (req, resp);
-            //resp.sendRedirect("/WEB-INF/showonestudent.jsp");
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
