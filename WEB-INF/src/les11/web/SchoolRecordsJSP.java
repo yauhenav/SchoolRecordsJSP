@@ -2,6 +2,7 @@ package les11.web;
 
 import java.io.*;
 import java.util.*;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class SchoolRecordsJSP extends HttpServlet {
                     executeShowAllStudents(pw, sesMngObj, sessObj);
                     break;
                 case "Show student":
-                    executeShowOneStudent(pw, sesMngObj, req);
+                    executeShowOneStudent(resp, sesMngObj, req, pw);
                     break;
                 case "Add new student":
                     executeAddNewStudent(pw, sesMngObj, req);
@@ -108,18 +109,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Display one specified student
      */
-    private void executeShowOneStudent (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeShowOneStudent (HttpServletResponse resp, Service sesMngObj, HttpServletRequest req, PrintWriter pw) throws DaoException, ServiceException, IOException, ServletException {
         String paramVal = req.getParameter("show_student_ID");
         if (paramVal.matches("[0-9]+")) {
             int key = Integer.parseInt(paramVal);
             Student student = new Student(key);
             student = sesMngObj.displayOneStudent(student);
-            pw.println("<B>Here goes one student from selected key</B>");
-            pw.println("<table border=1>");
-            pw.println("<tr>");
-            pw.println("<td>" + student + "</td>");
-            pw.println("</tr>");
-            pw.println("</table>");
+            req.setAttribute("studentObj", student);
+            //RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/showonestudent.jsp");
+            //dispatcher.forward (req, resp);
+            resp.sendRedirect("/WEB-INF/showonestudent.jsp");
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
