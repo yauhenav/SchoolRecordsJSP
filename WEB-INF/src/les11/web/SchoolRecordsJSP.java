@@ -33,7 +33,7 @@ public class SchoolRecordsJSP extends HttpServlet {
                     executeShowOneStudent(resp, sesMngObj, req, pw);
                     break;
                 case "Add new student":
-                    executeAddNewStudent(pw, sesMngObj, req);
+                    executeAddNewStudent(resp, pw, sesMngObj, req);
                     break;
                 case "Update student":
                     executeUpdateStudent(pw, sesMngObj, req);
@@ -123,7 +123,7 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Add new student
      */
-    private void executeAddNewStudent (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeAddNewStudent (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("new_student_ID");
         String nameValue = req.getParameter("new_student_name");
         String surnameValue = req.getParameter("new_student_surname");
@@ -132,9 +132,11 @@ public class SchoolRecordsJSP extends HttpServlet {
             int id = Integer.parseInt(idValue);
             Student student = new Student(id, nameValue, surnameValue);
             sesMngObj.addStudent(student);
-            pw.println("<B>New student has been added</B>");
-            pw.println("Go to home page and press button in Show all students " +
-                    "section to check if student was added");
+            String message = "This new student has been added to the DB";
+            req.setAttribute("studentObj0", student);
+            req.setAttribute("message", message);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/add-new-student-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect name or surname, " +
                     "go back and enter a valid name</font>");

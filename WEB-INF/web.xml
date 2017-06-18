@@ -3,22 +3,22 @@
 
 <web-app>
 
-  <listener>
-    <listener-class>les11.web.SessionListener</listener-class>
-  </listener>
+    <listener>
+        <listener-class>les11.web.SessionListener</listener-class>
+    </listener>
 
-  <servlet>
-    <servlet-name>SchoolRecordsJSP</servlet-name>
-    <servlet-class>les11.web.SchoolRecordsJSP</servlet-class>
-  </servlet>
+    <servlet>
+        <servlet-name>SchoolRecordsJSP</servlet-name>
+        <servlet-class>les11.web.SchoolRecordsJSP</servlet-class>
+    </servlet>
 
-  <servlet-mapping>
-    <servlet-name>SchoolRecordsJSP</servlet-name>
-    <url-pattern>/SchoolRecordsJSP</url-pattern>
-  </servlet-mapping>
-  
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>SchoolRecordsJSP</servlet-name>
+        <url-pattern>/SchoolRecordsJSP</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 
 </web-app>
