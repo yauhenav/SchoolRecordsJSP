@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="les11.logic.dto.Student" %>
-<%@page import="java.util.*"%>
+<%@ page import="java.util.*"%>
 
 <!DOCTYPE html>
 
@@ -13,15 +13,15 @@
 
 <B>Here go all students from the DB</B>
 
-<%List<Student> lst = (List<Student>) request.getAttribute("studentsList");
-Iterator<Student> iterator = lst.iterator();
+<%List<Object> lst = (List<Object>) request.getAttribute("list");
+Iterator<Object> iterator = lst.iterator();
 %>
 
 <table border=1>
 
 <%while (iterator.hasNext()) {%>
     <tr>
-       <% Student element = iterator.next();%>
+       <% Object element = iterator.next();%>
         <td> <%=element%> </td>
     </tr>
     <%}%>

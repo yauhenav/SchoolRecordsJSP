@@ -97,8 +97,9 @@ public class SchoolRecordsJSP extends HttpServlet {
         //Uncomment the line below to print session number to web server console for test purposes
         System.out.println(sessObj);
         List<Student> lst = sesMngObj.displayAllStudents();
-        req.setAttribute("studentsList", lst);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/show-all-students-result.jsp");
+        req.setAttribute("list", lst);
+        req.setAttribute("message", "Here goes the list of all students in the DB");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
         dispatcher.forward (req, resp);
     }
 
@@ -111,8 +112,9 @@ public class SchoolRecordsJSP extends HttpServlet {
             int key = Integer.parseInt(paramVal);
             Student student = new Student(key);
             student = sesMngObj.displayOneStudent(student);
-            req.setAttribute("studentObj", student);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/showonestudentresult.jsp");
+            req.setAttribute("item", student);
+            req.setAttribute("message", "Here goes one selected student");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
             dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
@@ -132,10 +134,9 @@ public class SchoolRecordsJSP extends HttpServlet {
             int id = Integer.parseInt(idValue);
             Student student = new Student(id, nameValue, surnameValue);
             sesMngObj.addStudent(student);
-            String message = "This new student has been added to the DB";
-            req.setAttribute("studentObj0", student);
-            req.setAttribute("message", message);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/add-new-student-result.jsp");
+            req.setAttribute("item", student);
+            req.setAttribute("message", "This new student has been added to the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
             dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect name or surname, " +
