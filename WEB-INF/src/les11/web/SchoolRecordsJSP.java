@@ -36,13 +36,13 @@ public class SchoolRecordsJSP extends HttpServlet {
                     executeAddNewStudent(resp, pw, sesMngObj, req);
                     break;
                 case "Update student":
-                    executeUpdateStudent(pw, sesMngObj, req);
+                    executeUpdateStudent(resp, pw, sesMngObj, req);
                     break;
                 case "Delete student":
-                    executeDeleteStudent(pw, sesMngObj, req);
+                    executeDeleteStudent(resp, pw, sesMngObj, req);
                     break;
                 case "Show subject":
-                    executeShowOneSubject(pw, sesMngObj, req);
+                    executeShowOneSubject(resp, pw, sesMngObj, req);
                     break;
                 case "Show all subjects":
                     executeShowAllSubjects(pw, sesMngObj);
@@ -147,7 +147,7 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Update existing student
      */
-    private void executeUpdateStudent (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeUpdateStudent (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("update_student_ID");
         String nameValue = req.getParameter("update_student_name");
         String surnameValue = req.getParameter("update_student_surname");
@@ -156,9 +156,10 @@ public class SchoolRecordsJSP extends HttpServlet {
             int id = Integer.parseInt(idValue);
             Student student = new Student(id, nameValue, surnameValue);
             sesMngObj.updateStudent(student);
-            pw.println("<B>Update of existing student</B>");
-            pw.println("Go to home page and press button in Show all students " +
-                    "section to check if student was updated");
+            req.setAttribute("item", student);
+            req.setAttribute("message", "This is the updated student");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect name or surname, " +
                     "go back and enter a valid name</font>");
@@ -168,15 +169,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Delete specified student
      */
-    private void executeDeleteStudent (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeDeleteStudent (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("delete_student_ID");
         if (idValue.matches("[0-9]+")) {
             int id = Integer.parseInt(idValue);
             Student student = new Student (id);
             sesMngObj.deleteStudent(student);
-            pw.println("<B>Deletion of existing student</B>");
-            pw.println("Go to home page and press button in Show all students " +
-                    "section to check if student was deleted");
+            req.setAttribute("item", student);
+            req.setAttribute("message", "This student has been removed from the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
@@ -186,18 +188,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Display one specified subject
      */
-    private void executeShowOneSubject (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeShowOneSubject (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String paramVal = req.getParameter("show_subject_ID");
         if (paramVal.matches("[0-9]+")) {
             int key = Integer.parseInt(paramVal);
             Subject subject = new Subject(key);
             subject = sesMngObj.displayOneSubject(subject);
-            pw.println("<B>Here goes the subject from selected key</B>");
-            pw.println("<table border=1>");
-            pw.println("<tr>");
-            pw.println("<td>" + subject + "</td>");
-            pw.println("</tr>");
-            pw.println("</table>");
+            req.setAttribute("item", subject);
+            req.setAttribute("message", "Here goes one selected subject");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
