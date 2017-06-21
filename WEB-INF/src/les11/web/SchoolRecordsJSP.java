@@ -45,31 +45,31 @@ public class SchoolRecordsJSP extends HttpServlet {
                     executeShowOneSubject(resp, pw, sesMngObj, req);
                     break;
                 case "Show all subjects":
-                    executeShowAllSubjects(pw, sesMngObj);
+                    executeShowAllSubjects(resp, pw, sesMngObj, req);
                     break;
                 case "Add new subject":
-                    executeAddNewSubject(pw, sesMngObj, req);
+                    executeAddNewSubject(resp, pw, sesMngObj, req);
                     break;
                 case "Update subject":
-                    executeUpdateExistingSubject(pw, sesMngObj, req);
+                    executeUpdateExistingSubject(resp, pw, sesMngObj, req);
                     break;
                 case "Delete subject":
-                    executeDeleteSpecifiedSubject(pw, sesMngObj, req);
+                    executeDeleteSpecifiedSubject(resp, pw, sesMngObj, req);
                     break;
                 case "Show mark":
-                    executeShowOneSpecifiedMark(pw, sesMngObj, req);
+                    executeShowOneSpecifiedMark(resp, pw, sesMngObj, req);
                     break;
                 case "Show all marks":
-                    executeShowAllMarks(pw, sesMngObj);
+                    executeShowAllMarks(resp, pw, sesMngObj, req);
                     break;
                 case "Show student's marks":
-                    executeShowMarksOneStudent(pw, sesMngObj, req);
+                    executeShowMarksOneStudent(resp, pw, sesMngObj, req);
                     break;
                 case "Add new mark":
-                    executeAddNewMark(pw, sesMngObj, req);
+                    executeAddNewMark(resp, pw, sesMngObj, req);
                     break;
                 case "Update existing mark":
-                    executeUpdateExistingMark(pw, sesMngObj, req);
+                    executeUpdateExistingMark(resp, pw, sesMngObj, req);
                     break;
                 case "Delete mark":
                     executeDeleteSpecifiedMark(pw, sesMngObj, req);
@@ -207,32 +207,30 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Display all subjects
      */
-    private void executeShowAllSubjects (PrintWriter pw, Service sesMngObj) throws DaoException, ServiceException {
+    private void executeShowAllSubjects (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         pw.println("<B>Here's a list of all subjects in the DB</B>");
         pw.println("<table border=1>");
         List<Subject> lst = sesMngObj.displayAllSubjects();
-        Iterator<Subject> iterator = lst.iterator();
-        while (iterator.hasNext()) {
-            pw.println("<tr>");
-            Subject element = iterator.next();
-            pw.println("<td>" + element + "</td>");
-            pw.println("</tr>");
-        }
+        req.setAttribute("list", lst);
+        req.setAttribute("message", "Here goes the list of all subjects in the DB");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+        dispatcher.forward (req, resp);
     }
 
     /**
      * Add new subject
      */
-    private void executeAddNewSubject (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeAddNewSubject (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("new_subject_ID");
         String descriptionValue = req.getParameter("new_subject_description");
         if (idValue.matches("[0-9]+") && descriptionValue.matches("[A-Za-z]+")) {
             int id = Integer.parseInt(idValue);
             Subject subject = new Subject(id, descriptionValue);
             sesMngObj.addSubject(subject);
-            pw.println("<B>New subject has been added</B>");
-            pw.println("Go to home page and press button in Show all subjects " +
-                    "section to check if subject was added");
+            req.setAttribute("item", subject);
+            req.setAttribute("message", "This new subject has been added to the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect description, " +
                     "go back and enter a valid description</font>");
@@ -242,16 +240,17 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Update existing subject
      */
-    private void executeUpdateExistingSubject (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeUpdateExistingSubject (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("update_subject_ID");
         String descriptionValue = req.getParameter("update_subject_description");
         if (idValue.matches("[0-9]+") && descriptionValue.matches("[A-Za-z]+")) {
             int id = Integer.parseInt(idValue);
             Subject subject = new Subject(id, descriptionValue);
             sesMngObj.updateSubject(subject);
-            pw.println("<B>Update of existing subject</B>");
-            pw.println("Go to home page and press button in Show all subjects " +
-                    "section to check if subject was updated");
+            req.setAttribute("item", subject);
+            req.setAttribute("message", "This is the updated subject");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect description, " +
                     "go back and enter a valid one</font>");
@@ -261,15 +260,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Delete specified subject
      */
-    private void executeDeleteSpecifiedSubject (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeDeleteSpecifiedSubject (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("delete_subject_ID");
         if (idValue.matches("[0-9]+")) {
             int id = Integer.parseInt(idValue);
             Subject subject = new Subject(id);
             sesMngObj.deleteSubject(subject);
-            pw.println("<B>Deletion of existing subject</B>");
-            pw.println("Go to home page and press button in Show all subjects " +
-                    "section to check if subject was deleted");
+            req.setAttribute("item", subject);
+            req.setAttribute("message", "This subject has been removed from the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
@@ -279,18 +279,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Show one specified mark
      */
-    private void executeShowOneSpecifiedMark (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeShowOneSpecifiedMark (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String paramVal = req.getParameter("show_mark_ID");
         if (paramVal.matches("[0-9]+")) {
             int id = Integer.parseInt(paramVal);
             Mark mark = new Mark (id);
             mark = sesMngObj.displayOneMark(mark);
-            pw.println("<B>Here goes the mark from selected key</B>");
-            pw.println("<table border=1>");
-            pw.println("<tr>");
-            pw.println("<td>" + mark + "</td>");
-            pw.println("</tr>");
-            pw.println("</table>");
+            req.setAttribute("item", mark);
+            req.setAttribute("message", "Here goes one selected mark");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
@@ -300,37 +298,29 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Show all marks
      */
-    private void executeShowAllMarks (PrintWriter pw, Service sesMngObj) throws DaoException, ServiceException {
+    private void executeShowAllMarks (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         pw.println("<B>Here's a list of all marks in the DB</B>");
         pw.println("<table border=1>");
         List<Mark> lst = sesMngObj.displayAllMarks();
-        Iterator<Mark> iterator = lst.iterator();
-        while (iterator.hasNext()) {
-            pw.println("<tr>");
-            Mark mark = iterator.next();
-            pw.println("<td>" + mark + "</td>");
-            pw.println("</tr>");
-        }
+        req.setAttribute("list", lst);
+        req.setAttribute("message", "Here goes the list of all marks in the DB");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+        dispatcher.forward (req, resp);
     }
 
     /**
      * Display all marks of one student
      */
-    private void executeShowMarksOneStudent (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeShowMarksOneStudent (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String paramVal = req.getParameter("show_all_marks_1stud");
         if (paramVal.matches("[0-9]+")) {
             int studentId = Integer.parseInt(paramVal);
             Mark mark = new Mark(0, 0, studentId, 0);
             List<Mark> lst = sesMngObj.displayMarksOneStud(mark);
-            pw.println("<B>Here's a list of all marks of one specified student</B>");
-            pw.println("<table border=1>");
-            Iterator<Mark> iterator = lst.iterator();
-            while (iterator.hasNext()) {
-                pw.println("<tr>");
-                mark = iterator.next();
-                pw.println("<td>" + mark + "</td>");
-                pw.println("</tr>");
-            }
+            req.setAttribute("list", lst);
+            req.setAttribute("message", "Here goes the list of all marks of one selected student");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
@@ -340,7 +330,7 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Add new mark
      */
-    private void executeAddNewMark (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeAddNewMark (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("new_mark_ID");
         String valueValue = req.getParameter("new_mark_value");
         String studentIdValue = req.getParameter("new_mark_studentId");
@@ -354,9 +344,10 @@ public class SchoolRecordsJSP extends HttpServlet {
             int subjectId = Integer.parseInt(subjectIdValue);
             Mark mark = new Mark (id, value, studentId, subjectId);
             sesMngObj.addMark (mark);
-            pw.println("<B>Addition of new mark</B>");
-            pw.println("Go to home page and press button in Show all marks " +
-                    "section to check if mark was added");
+            req.setAttribute("item", mark);
+            req.setAttribute("message", "This new mark has been added to the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect mark id " +
                     "or mark value, or student id, or subject id, go back " +
@@ -367,7 +358,7 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Update existing mark
      */
-    private void executeUpdateExistingMark (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeUpdateExistingMark (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("update_mark_ID");
         String valueValue = req.getParameter("update_mark_value");
         String studentIdValue = req.getParameter("update_mark_studentId");
@@ -381,9 +372,10 @@ public class SchoolRecordsJSP extends HttpServlet {
             int subjectId = Integer.parseInt(subjectIdValue);
             Mark mark = new Mark(id, value, studentId, subjectId);
             sesMngObj.updateMark (mark);
-            pw.println("<B>Update of a mark</B>");
-            pw.println("Go to home page and press button in Show all marks section " +
-                    "to check if mark was updated");
+            req.setAttribute("item", mark);
+            req.setAttribute("message", "This is the updated subject");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered incorrect mark id " +
                     "or mark value, or student id, or subject id, " +

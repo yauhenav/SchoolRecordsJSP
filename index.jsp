@@ -14,16 +14,43 @@
         <td><a href="show-all-students-form.jsp">Show all students</a></td>
     </tr>
     <tr>
-        <td><a href="add-new-student-form.jsp">Enter student attributes to add new student into DB</a></td>
+        <td><a href="add-new-student-form.jsp">Add new student</a></td>
     </tr>
     <tr>
-        <td><a href="update-student-form.jsp">Enter student attributes to update an existing student from DB</a></td>
+        <td><a href="update-student-form.jsp">Update existing student</a></td>
     </tr>
     <tr>
-        <td><a href="delete-student-form.jsp">Enter student's ID to delete a student from the DB</a></td>
+        <td><a href="delete-student-form.jsp">Delete student</a></td>
     </tr>
     <tr>
         <td><a href="show-one-subject-form.jsp">Show one specified subject</a></td>
+    </tr>
+    <tr>
+        <td><a href="show-all-subjects-form.jsp">Show all subjects</a></td>
+    </tr>
+    <tr>
+        <td><a href="add-new-subject-form.jsp">Add new subject</a></td>
+    </tr>
+    <tr>
+        <td><a href="update-subject-form.jsp">Update existing subject</a></td>
+    </tr>
+    <tr>
+        <td><a href="delete-subject-form.jsp">Delete subject</a></td>
+    </tr>
+    <tr>
+        <td><a href="show-one-mark-form.jsp">Show one specified mark</a></td>
+    </tr>
+    <tr>
+        <td><a href="show-all-marks-form.jsp">Show all marks</a></td>
+    </tr>
+    <tr>
+        <td><a href="show-marks-one-student-form.jsp">Show marks of one student</a></td>
+    </tr>
+    <tr>
+        <td><a href="add-new-mark-form.jsp">Add new mark</a></td>
+    </tr>
+    <tr>
+        <td><a href="update-mark-form.jsp">Update existing mark</a></td>
     </tr>
 
 

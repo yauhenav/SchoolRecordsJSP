@@ -52,6 +52,6 @@ public class Mark {
     }
 
     public String toString() {
-        return "[" + this.studentId +"'s mark for " + this.subjectId + " is " + this.value + "]";
+        return "[" + this.studentId +"'s mark for " + this.subjectId + " is " + this.value + ", ID No." + this. id + "]";
     }
 }
