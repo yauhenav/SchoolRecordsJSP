@@ -52,6 +52,12 @@
     <tr>
         <td><a href="update-mark-form.jsp">Update existing mark</a></td>
     </tr>
+    <tr>
+        <td><a href="delete-mark-form.jsp">Delete mark</a></td>
+    </tr>
+    <tr>
+        <td><a href="close-current-session-form.jsp">Close the current session of this application</a></td>
+    </tr>
 
 
 </table>

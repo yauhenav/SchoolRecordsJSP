@@ -72,7 +72,7 @@ public class SchoolRecordsJSP extends HttpServlet {
                     executeUpdateExistingMark(resp, pw, sesMngObj, req);
                     break;
                 case "Delete mark":
-                    executeDeleteSpecifiedMark(pw, sesMngObj, req);
+                    executeDeleteSpecifiedMark(resp, pw, sesMngObj, req);
                     break;
                 case "Close everything":
                     executeCloseEverything(pw, sessObj);
@@ -386,15 +386,16 @@ public class SchoolRecordsJSP extends HttpServlet {
     /**
      * Delete specified mark
      */
-    private void executeDeleteSpecifiedMark (PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException {
+    private void executeDeleteSpecifiedMark (HttpServletResponse resp, PrintWriter pw, Service sesMngObj, HttpServletRequest req) throws DaoException, ServiceException, IOException, ServletException {
         String idValue = req.getParameter("delete_mark_ID");
         if (idValue.matches("[0-9]+")) {
             int id = Integer.parseInt(idValue);
             Mark mark = new Mark (id);
             sesMngObj.deleteMark(mark);
-            pw.println("<B>Deletion of existing mark</B>");
-            pw.println("Go to home page and press button in Show all marks " +
-                    "section to check if mark was deleted");
+            req.setAttribute("item", mark);
+            req.setAttribute("message", "This mark has been removed from the DB");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/single-result.jsp");
+            dispatcher.forward (req, resp);
         } else {
             pw.println("<font color=\"red\">You've entered invalid ID value, " +
                     "go back and enter a valid ID</font>");
@@ -406,6 +407,7 @@ public class SchoolRecordsJSP extends HttpServlet {
      */
     private void executeCloseEverything (PrintWriter pw, HttpSession sessObj) throws DaoException {
         pw.println("<B>This session has been closed, resulting in closure of all prepared statements, and connection</B>");
+        pw.print("<a href=\"index.jsp\">Go to Home Page</a>");
         sessObj.invalidate();
     }
 }
